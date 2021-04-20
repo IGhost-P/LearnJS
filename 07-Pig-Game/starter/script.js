@@ -89,8 +89,10 @@ btnNew.addEventListener('click', function () {
 
     playing = true;
     diceEl.classList.add('hidden');
-    document.querySelector(`.player--${activePlayer}`).classList.remove('.player--winner');
-    document.querySelector(`.player--${activePlayer}`).classList.remove('.player--active');
+    player0El.classList.remove('.player--winner');
+    player0El.classList.remove('.player--active');
+    player1El.classList.remove('.player--winner');
+    player1El.classList.remove('.player--active');
     document.getElementById(`score--0`).textContent = 0;
     document.getElementById(`score--1`).textContent = 0;
     document.getElementById(`current--0`).textContent = 0;
