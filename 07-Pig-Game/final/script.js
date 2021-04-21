@@ -90,7 +90,7 @@ btnHold.addEventListener('click', function () {
         .classList.remove('player--active');
     } else {
       // Switch to the next player
-      switchPlayer();
+      switchPlayer(); // 플레이어 변경으로 바꿀수 있다..? 근데 hiiden을 넣어야 할거 같은데
     }
   }
 });
