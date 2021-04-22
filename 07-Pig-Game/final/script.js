@@ -87,7 +87,7 @@ btnHold.addEventListener('click', function () {
         .classList.add('player--winner');
       document
         .querySelector(`.player--${activePlayer}`)
-        .classList.remove('player--active');
+        .classList.remove('player--active'); // 여기서 변경?
     } else {
       // Switch to the next player
       switchPlayer(); // 플레이어 변경으로 바꿀수 있다..? 근데 hiiden을 넣어야 할거 같은데
