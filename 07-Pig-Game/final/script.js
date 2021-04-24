@@ -80,7 +80,7 @@ btnHold.addEventListener('click', function () {
     if (scores[activePlayer] >= 100) {
       // Finish the game
       playing = false;
-      diceEl.classList.toggle('hidden');
+      diceEl.classList.remove('hidden');
 
       document
         .querySelector(`.player--${activePlayer}`)
@@ -90,7 +90,7 @@ btnHold.addEventListener('click', function () {
         .classList.remove('player--active'); // 여기서 변경?
     } else {
       // Switch to the next player
-      switchPlayer(); // 플레이어 변경으로 바꿀수 있다..? 근데 hiiden을 넣어야 할거 같은데
+      switchPlayer(); //
     }
   }
 });
