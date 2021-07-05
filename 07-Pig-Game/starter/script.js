@@ -89,10 +89,9 @@ btnNew.addEventListener('click', function () {
 
     playing = true;
     diceEl.classList.add('hidden');
-    player0El.classList.remove('.player--winner');
-    player0El.classList.remove('.player--active');
-    document.querySelector(`.player--${activePlayer}`).classList.remove('.player--winner');
-    document.querySelector(`.player--${activePlayer}`).classList.remove('.player--active');
+    document.querySelector(`.player--${activePlayer}`).classList.remove('player--winner')
+    document.querySelector(`.player--${activePlayer}`).classList.remove('player--active')
+
     document.getElementById(`score--0`).textContent = 0;
     document.getElementById(`score--1`).textContent = 0;
     document.getElementById(`current--0`).textContent = 0;
