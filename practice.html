@@ -2,20 +2,14 @@
 <html>
 
 <body>
-    <ul id="fruits">
-        <li>Apple</li>
-    </ul>
+    <button>Clcik me!</button>
 </body>
 <script>
-    const $fruits = document.getElementById('fruits');
+    const $button = document.querySelector('button')
 
-    const $li = document.createElement('li');
-
-    const textNode = document.createTextNode('Banana');
-
-    $li.appendChild(textNode);
-
-    $fruits.appendChild($li);
+    $button.addEventListener('click', function () {
+        console.log('button click');
+    })
 </script>
 
 </html>
