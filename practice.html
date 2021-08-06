@@ -1,23 +1,50 @@
 <!DOCTYPE html>
 <html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: beige;
+            border: 5px solid orange;
+            cursor: pointer;
+        }
+    </style>
+</head>
 
 <body>
-    <input type="checkbox">
-    <em class="message">off</em>
-</body>
-<script>
-    const $checkbox = document.querySelector('input[type=checkbox]')
-    const $msg = document.querySelector('.message')
+    <div class="box"></div>
+    <script>
+        const $box = document.querySelector('.box')
+        const initailMousePos = { x: 0, y: 0 };
+        const offset = { x: 0, y: 0 };
+        const move = e => {
+            offset.x = e.clientX - initailMousePos.x;
+            offset.y = e.clientY - initailMousePos.y;
+            console.log(initailMousePos.x + "움직이고 있습니다")
+            console.log(e.clientX + "움직이고 있습니다")
 
-    $checkbox.onclick = e => {
-        console.log(Object.getPrototypeOf(e) === Event.prototype);
 
-        $checkbox.onchang = e => {
-            console.log(e.target === e.c);
-
-            $msg.textContent = e.target.checked ? 'on' : 'off';
+            $box.style.transform = `translate3d(${offset.x}px, ${offset.y}px, 0)`
         };
-    };
-</script>
+
+        $box.addEventListener('mousedown', e => {
+            initailMousePos.x = e.clientX - offset.x;
+            initailMousePos.y = e.clientY - offset.y;
+            console.log(initailMousePos.x + "끝")
+            console.log(e.clientX + "끝")
+
+            document.addEventListener('mousemove', move)
+        })
+
+        document.addEventListener('mouseup', () => {
+            document.removeEventListener('mousemove', move);
+        })
+    </script>
+
+</body>
 
 </html>
