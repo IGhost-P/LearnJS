@@ -2,21 +2,20 @@
 <html>
 
 <body>
-    <!-- beforebegin -->
-    <div id="foo">
-        <!-- afterbegin -->
-        text
-        <!-- beforeend -->
-    </div>
-    <!-- afterend -->
+    <ul id="fruits">
+        <li>Apple</li>
+    </ul>
 </body>
 <script>
-    const $foo = document.getElementById('foo');
+    const $fruits = document.getElementById('fruits');
 
-    $foo.insertAdjacentHTML('beforebegin', '<p>beforebegin</p>');
-    $foo.insertAdjacentHTML('afterbegin', '<p>afterbegin</p>');
-    $foo.insertAdjacentHTML('beforeend', '<p>beforeend</p>');
-    $foo.insertAdjacentHTML('afterend', '<p>afterend</p>');
+    const $li = document.createElement('li');
+
+    const textNode = document.createTextNode('Banana');
+
+    $li.appendChild(textNode);
+
+    $fruits.appendChild($li);
 </script>
 
 </html>
