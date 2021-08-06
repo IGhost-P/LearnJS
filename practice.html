@@ -2,14 +2,22 @@
 <html>
 
 <body>
-    <button>Clcik me!</button>
+    <input type="checkbox">
+    <em class="message">off</em>
 </body>
 <script>
-    const $button = document.querySelector('button')
+    const $checkbox = document.querySelector('input[type=checkbox]')
+    const $msg = document.querySelector('.message')
 
-    $button.addEventListener('click', function () {
-        console.log('button click');
-    })
+    $checkbox.onclick = e => {
+        console.log(Object.getPrototypeOf(e) === Event.prototype);
+
+        $checkbox.onchang = e => {
+            console.log(e.target === e.c);
+
+            $msg.textContent = e.target.checked ? 'on' : 'off';
+        };
+    };
 </script>
 
 </html>
