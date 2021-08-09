@@ -1,52 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <style>
-        #fruits {
-            display: flex;
-            list-style-type: noen;
-            padding: 0;
-        }
-
-        #fruits li {
-            width: 100px;
-            cursor: pointer;
-        }
-
-        #fruits .active {
-            color: red;
-            text-decoration: underline;
-        }
-    </style>
-</head>
+<html>
 
 <body>
-    <nav>
-        <ul id="fruits">
-            <li id="apple" class="active">Apple</li>
-            <li id="banana">Banana</li>
-            <li id="orange">Orange</li>
-        </ul>
-    </nav>
-    <div>선택된 내비게이션 아이템 : <em class="msg">apple</em></div>
+    <input type="text">
+    <div class="msg"></div>
     <script>
-        const $fruits = document.getElementById('fruits');
+        const $input = document.querySelector('input');
         const $msg = document.querySelector('.msg');
 
-        function activate({ target }) {
+        const debounce = (callback, delay) => {
+            let timerId;
 
-            if (!target.matches('#fruits > li')) return;
-
-            [...$fruits.children].forEach($fruits => {
-                $fruits.classList.toggle('active', $fruits === target)
-                $msg.textContent = target.id
-            })
+            return event => {
+                if (timerId) clearTimeout(timerId);
+                timerId = setTimeout(callback, delay, event); // 연속된 값이 들어오면 바로 보여주지 않고(딜레이 안에), 정상 입력이 되면 그 동안 입력된 값을 한번에 다 보여준다.
+            }
         }
 
-        $fruits.onclick = activate;
+        $input.oninput = debounce(e => {
+            $msg.textContent = e.target.value;
+        }, 300)
     </script>
-
 </body>
 
 </html>
