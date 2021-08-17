@@ -5,12 +5,22 @@
 </head>
 
 <body>
-    <input type="text">
+    <pre></pre>
     <script>
-        document.querySelector('input').oninput = function () {
-            console.log(this.value);
-            return this.value;
+        const get = (url, callback) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url)
+            xhr.send();
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    callback(JSON.parse(xhr.response))
+                } else {
+                    failureCallback(xhr.status)
+                }
+            }
         }
+
+        get('https://jsonplaceholder.typicode.com/posts/1', console.log, console.error)
     </script>
 </body>
 
