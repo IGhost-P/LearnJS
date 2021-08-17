@@ -15,12 +15,18 @@
                 if (xhr.status === 200) {
                     callback(JSON.parse(xhr.response))
                 } else {
-                    failureCallback(xhr.status)
+                    console.error(`${xhr.status} ${xhr.statusText}`)
                 }
             }
         }
 
-        get('https://jsonplaceholder.typicode.com/posts/1', console.log, console.error)
+        const url = 'https://jsonplaceholder.typicode.com'
+        get(`${url}/posts/1`, ({ userId }) => {
+            console.log(userId)
+            get(`${url}/users/${userId}`, userInfo => {
+                console.log(userInfo);
+            });
+        })
     </script>
 </body>
 
