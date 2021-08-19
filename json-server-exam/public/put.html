@@ -21,10 +21,10 @@
                 }
             })
         }
-        promiseGet('https://jsonplaceholder.typicode.com/posts/1')
-            .then(console.log)
-            .catch(err => console.error(err))
-            .finally(() => console.log('Bye!'))
+        Promise.allSettled([
+            new Promise(resolve => setTimeout(() => resolve(1), 2000)),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Error!')), 1000))
+        ]).then(console.log);
     </script>
 </body>
 
