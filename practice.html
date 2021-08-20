@@ -5,22 +5,30 @@
     <input type="text">
     <div class="msg"></div>
     <script>
-        const $input = document.querySelector('input');
-        const $msg = document.querySelector('.msg');
+        const fetch = require('node-fetch');
 
-        const debounce = (callback, delay) => {
-            let timerId;
+        const async = generatorFunc => {
+            const generator = generatorFunc();
 
-            return event => {
-                if (timerId) clearTimeout(timerId);
-                timerId = setTimeout(callback, delay, event); // 연속된 값이 들어오면 바로 보여주지 않고(딜레이 안에), 정상 입력이 되면 그 동안 입력된 값을 한번에 다 보여준다.
-            }
+            const onResolved = arg => {
+                const result = generator.next(arg);
+
+                return result.done
+                    ? result.value
+                    : result.value.then(res => onResolved(res));
+
+                return onResolved;
+            };
         }
 
-        $input.oninput = debounce(e => {
-            $msg.textContent = e.target.value;
-        }, 300)
+        (async(function* fetchTodo() {
+            const url = 'https://jsonplaceholder.typicode.com/todos/1';
+
+            const response = yield fetch(url);
+            const todo = yield response.json();
+            console.log(todo);
+        })())
     </script>
 </body>
 
-</html>
+</html>ㅈ
