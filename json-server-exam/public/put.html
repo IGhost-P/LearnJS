@@ -8,20 +8,18 @@
     <pre></pre>
     <script>
         function* genFunc() {
-            try {
-                yield 1;
-                yield 2;
-                yield 3;
-            } catch (e) {
-                console.log(e);
-            }
+            const x = yield 1;
+            const y = yield (x + 10)
+            return x + y;
         }
 
         const generator = genFunc();
 
         console.log(generator.next());
-        //console.log(generator.return('End!'));
-        console.log(generator.throw('Error!'));
+        console.log(generator.next(10));
+        console.log(generator.next(20));
+
+
     </script>
 </body>
 
