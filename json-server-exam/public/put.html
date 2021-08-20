@@ -7,17 +7,21 @@
 <body>
     <pre></pre>
     <script>
-        function* genFunc() {
-            const x = yield 1;
-            const y = yield (x + 10)
-            return x + y;
+        const infinitFibonacci = (function* () {
+            let [pre, cur] = [0, 1];
+
+            while (true) {
+                [pre, cur] = [cur, pre + cur];
+                yield cur;
+            }
+
+        }());
+
+        for (const num of infinitFibonacci) {
+            if (num > 10000) break;
+            console.log(num);
         }
 
-        const generator = genFunc();
-
-        console.log(generator.next());
-        console.log(generator.next(10));
-        console.log(generator.next(20));
 
 
     </script>
