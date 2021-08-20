@@ -7,29 +7,21 @@
 <body>
     <pre></pre>
     <script>
-        const request = {
-            get(url) {
-                return fetch(url);
-            },
-            post(url, payload) {
-                return fetch(url, {
-                    method: 'POST',
-                    header: { 'content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            },
-
-            patch(url, payload) {
-                return fetch(url, {
-                    method: 'PATCH',
-                    headers: { 'content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-            },
-            delete(url) {
-                return fetch(url, { method: 'DELETE' })
+        function* genFunc() {
+            try {
+                yield 1;
+                yield 2;
+                yield 3;
+            } catch (e) {
+                console.log(e);
             }
         }
+
+        const generator = genFunc();
+
+        console.log(generator.next());
+        //console.log(generator.return('End!'));
+        console.log(generator.throw('Error!'));
     </script>
 </body>
 
