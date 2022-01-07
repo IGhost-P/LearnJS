@@ -230,4 +230,42 @@ jessicaCopy.family.push('John');
 console.log('Before marriage:', jessica2);
 console.log('After marriage: ', jessicaCopy);
 */
+// Primitives vs. Objects in Practice
 
+// Primitive types
+let lastName = 'Williams';
+let oldLastName = lastName;
+lastName = 'Davis';
+console.log(lastName, oldLastName); // Davis Williams
+
+// Reference types
+const jessica = {
+  firstName: 'Jessica',
+  lastName: 'Williams',
+  age: 27,
+};
+
+const marriedJessica = jessica; // 참조에 의한 할당, 객체가 바뀜
+marriedJessica.lastName = 'Davis';
+console.log('Before marriage:', jessica); // Before marriage: Davis
+console.log('After marriage: ', marriedJessica); // After marriage: Davis
+// marriedJessica = {}; => 이렇게 아예 다른 객체로 선언해서 복사 해야함
+
+// Copying objects
+const jessica2 = {
+  firstName: 'Jessica',
+  lastName: 'Williams',
+  age: 27,
+  family: ['Alice', 'Bob'],
+};
+
+const jessicaCopy = Object.assign({}, jessica2); // 두개의 객체를 병합한다 jessicaCopy라는 빈객체에 카피가 된다
+// 하지만 복사를해도, 바뀌지 않는 이유는
+jessicaCopy.lastName = 'Davis';
+
+// 이제 복사복의 객체를 바꾸도 기존 객체는 여전히 남아 있다.
+jessicaCopy.family.push('Mary');
+jessicaCopy.family.push('John');
+
+console.log('Before marriage:', jessica2);
+console.log('After marriage: ', jessicaCopy);
