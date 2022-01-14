@@ -17,6 +17,108 @@ TEST DATA FOR 6: Use players 'Davies', 'Muller', 'Lewandowski' and 'Kimmich'. Th
 GOOD LUCK 😀
 */
 
+// const game = {
+//   team1: 'Bayern Munich',
+//   team2: 'Borrussia Dortmund',
+//   players: [
+//     [
+//       'Neuer',
+//       'Pavard',
+//       'Martinez',
+//       'Alaba',
+//       'Davies',
+//       'Kimmich',
+//       'Goretzka',
+//       'Coman',
+//       'Muller',
+//       'Gnarby',
+//       'Lewandowski',
+//     ],
+//     [
+//       'Burki',
+//       'Schulz',
+//       'Hummels',
+//       'Akanji',
+//       'Hakimi',
+//       'Weigl',
+//       'Witsel',
+//       'Hazard',
+//       'Brandt',
+//       'Sancho',
+//       'Gotze',
+//     ],
+//   ],
+//   score: '4:0',
+//   scored: ['Lewandowski', 'Gnarby', 'Lewandowski', 'Hummels'],
+//   date: 'Nov 9th, 2037',
+//   odds: {
+//     team1: 1.33,
+//     x: 3.25,
+//     team2: 6.5,
+//   },
+// };
+
+/* 코딩 챌린지 # 1
+// 1.
+// const Bayern_Munich = [...game.players[0]];
+// const Borrussia_Dortmund = [...game.players[1]];
+
+// 2.
+// let [GK, ...other] = [...game.players[0]];
+// const Bayern_Munich = [GK, ...other];
+
+// [GK, ...other] = [...game.players[1]];
+// const Borrussia_Dortmund = [GK, ...other];
+
+// 3.
+// const allTeam = [...game.players[0], ...game.players[1]]
+
+// 4.
+// const Bayern_Munich_final = [...game.players[0], 'Thiago', 'Coutinho', 'Perisic']
+
+// 5.
+// const { team1: team1, x: draw, team2: team2 } = game.odds;
+// console.log(team1, draw, team2);
+
+// 6.
+// const printGoals = (...players) => {
+//   for (let i = 0; players.length(); i++) {
+//     console.log(players[i]);
+//   }
+//   console.log(players.length)
+// };
+
+// 7. ? ahfm
+// game.odds.team1 > game.odds.team2 && console.log('win team 1');
+// game.odds.team2 > game.odds.team1 && console.log('win team 2');
+
+// 21분 걸림
+*/
+
+///////////////////////////////////////
+// Coding Challenge #2
+
+/* 
+Let's continue with our football betting app!
+
+1. Loop over the game.scored array and print each player name to the console, along with the goal number (Example: "Goal 1: Lewandowski")
+2. Use a loop to calculate the average odd and log it to the console (We already studied how to calculate averages, you can go check if you don't remember)
+3. Print the 3 odds to the console, but in a nice formatted way, exaclty like this:
+      Odd of victory Bayern Munich: 1.33
+      Odd of draw: 3.25
+      Odd of victory Borrussia Dortmund: 6.5
+Get the team names directly from the game object, don't hardcode them (except for "draw"). HINT: Note how the odds and the game objects have the same property names 😉
+
+BONUS: Create an object called 'scorers' which contains the names of the players who scored as properties, and the number of goals as the value. In this game, it will look like this:
+      {
+        Gnarby: 1,
+        Hummels: 1,
+        Lewandowski: 2
+      }
+
+GOOD LUCK 😀
+*/
+
 const game = {
   team1: 'Bayern Munich',
   team2: 'Borrussia Dortmund',
@@ -58,37 +160,39 @@ const game = {
   },
 };
 
-// 1.
-// const Bayern_Munich = [...game.players[0]];
-// const Borrussia_Dortmund = [...game.players[1]];
+//1.
+// for (const [idx, player] of game.scored.entries()) {
+//   console.log(`${idx + 1} :  ${player}`);
+// }
+//2.
 
-// 2.
-// let [GK, ...other] = [...game.players[0]];
-// const Bayern_Munich = [GK, ...other];
+//2.
+// const entries = Object.entries(game.odds);
+// let sum = 0;
+// let keySum = 0;
+// for (const [key, value] of entries) {
+//   sum += value;
+//   keySum += 1;
+// }
+// console.log(sum / keySum);
 
-// [GK, ...other] = [...game.players[1]];
-// const Borrussia_Dortmund = [GK, ...other];
+//3.
+// const entries = Object.entries(game.odds);
+// for (const [team, value] of entries) {
+//   const victoryTeam = game[team] && `victory ${team}`;
+//   console.log(`Odd of ${victoryTeam ?? 'draw'} : ${value}`);
+// }
 
-// 3.
-// const allTeam = [...game.players[0], ...game.players[1]]
-
-// 4.
-// const Bayern_Munich_final = [...game.players[0], 'Thiago', 'Coutinho', 'Perisic']
-
-// 5.
-// const { team1: team1, x: draw, team2: team2 } = game.odds;
-// console.log(team1, draw, team2);
-
-// 6.
-// const printGoals = (...players) => {
-//   for (let i = 0; players.length(); i++) {
-//     console.log(players[i]);
+//4.
+// const entries = Object.entries(game.scored);
+// let scorers = {};
+// let goal = 1;
+// for (const [key, player] of entries) {
+//   goal = 1;
+//   if (scorers[player]) {
+//     goal = scorers[player];
+//     scorers[player] = goal++;
 //   }
-//   console.log(players.length)
-// };
-
-// 7. ? ahfm
-// game.odds.team1 > game.odds.team2 && console.log('win team 1');
-// game.odds.team2 > game.odds.team1 && console.log('win team 2');
-
-// 21분 걸림
+//   scorers[player] = goal;
+// }
+// console.log(scorers);
