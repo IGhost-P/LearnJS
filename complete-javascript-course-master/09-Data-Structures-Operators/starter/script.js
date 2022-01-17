@@ -212,36 +212,54 @@ Let's continue with our football betting app! This time, we have a map with a lo
 GOOD LUCK 😀
 */
 
-const gameEvents = new Map([
-  [17, '⚽️ GOAL'],
-  [36, '🔁 Substitution'],
-  [47, '⚽️ GOAL'],
-  [61, '🔁 Substitution'],
-  [64, '🔶 Yellow card'],
-  [69, '🔴 Red card'],
-  [70, '🔁 Substitution'],
-  [72, '🔁 Substitution'],
-  [76, '⚽️ GOAL'],
-  [80, '⚽️ GOAL'],
-  [92, '🔶 Yellow card'],
-]);
-1;
-const evnet = new Set(gameEvents.values());
-console.log(evnet);
+// const gameEvents = new Map([
+//   [17, '⚽️ GOAL'],
+//   [36, '🔁 Substitution'],
+//   [47, '⚽️ GOAL'],
+//   [61, '🔁 Substitution'],
+//   [64, '🔶 Yellow card'],
+//   [69, '🔴 Red card'],
+//   [70, '🔁 Substitution'],
+//   [72, '🔁 Substitution'],
+//   [76, '⚽️ GOAL'],
+//   [80, '⚽️ GOAL'],
+//   [92, '🔶 Yellow card'],
+// ]);
+// 1;
+// const evnet = new Set(gameEvents.values());
+// console.log(evnet);
 
-2;
-gameEvents.delete(64);
-console.log(gameEvents);
+// 2;
+// gameEvents.delete(64);
+// console.log(gameEvents);
 
-3;
-const average = 90 / gameEvents.size;
-console.log(
-  `An event happened, on average, every ${Math.ceil(average)} minutes`
-);
+// 3;
+// const average = 90 / gameEvents.size;
+// console.log(
+//   `An event happened, on average, every ${Math.ceil(average)} minutes`
+// );
 
-4;
-for (const [time, event] of gameEvents) {
-  console.log(
-    `[${time < 45 ? 'FIRST HALF' : 'SECOND HALF'}] ${time} : ${event}`
-  );
-}
+// 4;
+// for (const [time, event] of gameEvents) {
+//   console.log(
+//     `[${time < 45 ? 'FIRST HALF' : 'SECOND HALF'}] ${time} : ${event}`
+//   );
+// }
+// Coding Challeng # 4
+document.body.append(document.createElement('textarea'));
+document.body.append(document.createElement('button'));
+
+const $ = selector => document.querySelector(selector);
+
+const btn = $('button').addEventListener('click', () => {
+  const textarea = $('textarea').value;
+  const rows = textarea.split('\n');
+  for (const [idx, text] of rows.entries()) {
+    const [first, second] = text.trim().split('_');
+    const finText = `${first}${second.replace(
+      second[0],
+      second[0].toUpperCase()
+    )}`;
+    console.log(`${finText.padEnd(20)} ${'✅'.repeat(idx + 1)}`);
+  }
+});
