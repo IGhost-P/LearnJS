@@ -98,7 +98,7 @@ document.querySelector('.again').addEventListener('click', function () {
 ///////////////////////////////////////
 // Coding Challenge #1
 
-/*
+/* 
 Implement a game rest functionality, so that the player can make a new guess! Here is how:
 
 1. Select the element with the 'again' class and attach a click event handler

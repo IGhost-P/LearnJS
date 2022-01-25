@@ -246,7 +246,6 @@ console.log(String(23), 23);
 console.log('I am ' + 23 + ' years old');
 console.log('23' - '10' - 3);
 console.log('23' / '2');
-console.log('23' > '18');
 
 let n = '1' + 1; // '11'
 n = n - 1;
@@ -445,7 +444,6 @@ console.log(drink2);
 console.log(`I like to drink ${age >= 18 ? 'wine 🍷' : 'water 💧'}`);
 */
 
-
 ////////////////////////////////////
 // Coding Challenge #4
 
@@ -468,12 +466,3 @@ const bill = 430;
 const tip = bill <= 300 && bill >= 50 ? bill * 0.15 : bill * 0.2;
 console.log(`The bill was ${bill}, the tip was ${tip}, and the total value ${bill + tip}`);
 */
-
-var person = {
-  first: 'Lee',
-  1: 10
-};
-
-console.log(person.first);
-console.log(person[1]);
-
