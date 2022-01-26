@@ -63,14 +63,36 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-// LECTURES
 
-const currencies = new Map([
-  ['USD', 'United States dollar'],
-  ['EUR', 'Euro'],
-  ['GBP', 'Pound sterling'],
-]);
+const displayMovements = function (movement) {
+  containerMovements.innerHTML = '';
+  movement.forEach(function (mov, i) {
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+    const html = `
+		<div class="movements__row">
+	        <div class="movements__type movements__type--${type}">${
+      i + 1
+    } ${type}</div>
+	        <div class="movements__value">${mov}€</div>
+	      </div>
+		    `;
 
-/////////////////////////////////////////////////
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+displayMovements(account1.movements);
+
+// codeing
+const dogsJulia = [3, 5, 2, 12, 7];
+const dogsKate = [4, 1, 15, 8, 3];
+const checkDogs = function (dogsJulia, dogsKate) {
+  const new_dogsJulia = dogsJulia.slice(1, -2);
+  const total_arr = [...new_dogsJulia, ...dogsKate];
+  console.log(total_arr);
+  total_arr.forEach(function (value, idx) {
+    const dogAge = value >= 3 ? 'dog' : 'puppy';
+    console.log(`${idx + 1} : ${dogAge}`);
+  });
+};
+checkDogs(dogsJulia, dogsKate);
