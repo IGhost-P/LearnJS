@@ -131,6 +131,7 @@ class App {
     // Handling clicks on map
     this.#map.on('click', this._showForm.bind(this));
 
+    // 맵이 들어오고 나서 실행되어야하기 때문에 여기에 위치, 사실 비동기 처리를 하면된다
     this.#workouts.forEach(work => {
       this._renderWorkoutMarker(work);
     });
@@ -316,18 +317,26 @@ class App {
     localStorage.setItem('workouts', JSON.stringify(this.#workouts));
   }
 
+  // 로컬 스토리지를 이용
   _getLocalStorage() {
+    // 문자열로 저장해줘야한다
     const data = JSON.parse(localStorage.getItem('workouts'));
 
     if (!data) return;
 
     this.#workouts = data;
-
+    // 데이터가 남아있다면, 해당 데이터로 랜더링을 다시 해줌
     this.#workouts.forEach(work => {
       this._renderWorkout(work);
+
+      // 비동기 처리를 위해 _loadMap으로 감
+      // this.#workouts.forEach(work => {
+      //   this._renderWorkoutMarker(work);
+      // });
     });
   }
 
+  // 리셋
   reset() {
     localStorage.removeItem('workouts');
     location.reload();

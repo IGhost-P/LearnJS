@@ -14,6 +14,7 @@ const inputElevation = document.querySelector('.form__input--elevation');
 class Workout {
   date = new Date();
   id = String(Date.now()).slice(-10); // 하지만 사용자 여러명이 동시에 사용할 가능성이 있기때문에 id를 시간으로 하는것은 좋지 않다
+  clicks = 0;
 
   constructor(coords, distance, duration) {
     // 옛날엔..
@@ -44,6 +45,11 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
+  }
+
+  // public interface = API
+  click() {
+    this.clicks++;
   }
 }
 
@@ -81,6 +87,7 @@ class Cycling extends Workout {
 class App {
   #map;
   #mapEvent;
+  #mapZoomLevel = 13;
   #workouts = [];
   constructor() {
     // 위치 정보 가져오기
@@ -89,6 +96,8 @@ class App {
     form.addEventListener('submit', this._newWorkOut.bind(this));
 
     inputType.addEventListener('change', () => this._toggleElevationField());
+
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this)); // 햔재 이벤트 객체에 this이니깐 바꿔줌
   }
 
   _getPosition() {
@@ -266,6 +275,29 @@ class App {
       `;
     // 이래야 형제 요소 앞으로 추가가 된다
     form.insertAdjacentHTML('afterend', html);
+  }
+
+  _moveToPopup(e) {
+    // BUGFIX: When we click on a workout before the map has loaded, we get an error. But there is an easy fix:
+    if (!this.#map) return;
+
+    const workoutEl = e.target.closest('.workout');
+
+    if (!workoutEl) return;
+
+    const workout = this.#workouts.find(
+      work => work.id === workoutEl.dataset.id
+    );
+
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
+
+    // using the public interface
+    // workout.click();
   }
 }
 
