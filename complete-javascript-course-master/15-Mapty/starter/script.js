@@ -15,7 +15,7 @@ class Workout {
   date = new Date();
   id = String(Date.now()).slice(-10); // 하지만 사용자 여러명이 동시에 사용할 가능성이 있기때문에 id를 시간으로 하는것은 좋지 않다
 
-  constructor(distance, duraton, coords) {
+  constructor(coords, distance, duraton) {
     // 옛날엔..
     // this.date = new Date();
     // this. id = ... 이런식
@@ -26,6 +26,7 @@ class Workout {
 }
 
 class Running extends Workout {
+  type = 'running';
   constructor(coords, distance, duration, cadence) {
     super(coords, distance, duration);
     this.cadence = cadence;
@@ -39,6 +40,7 @@ class Running extends Workout {
 }
 
 class Cycling extends Workout {
+  type = 'cycling';
   constructor(coords, distance, duration, elecationGain) {
     super(coords, distance, duration);
     this.elecationGain = elecationGain;
@@ -51,13 +53,11 @@ class Cycling extends Workout {
   }
 }
 
-const run1 = new Running([39, -12], 5.2, 24, 178);
-console.log(run1);
-
 // APP APLICATION
 class App {
   #map;
   #mapEvent;
+  #workouts = [];
   constructor() {
     // 위치 정보 가져오기
     this._getPosition();
@@ -106,30 +106,68 @@ class App {
   }
   _newWorkOut(e) {
     e.preventDefault();
-
+    // helper function
+    const valudInput = (...inputs) => {
+      return inputs.every(inp => Number.isFinite(inp));
+    };
+    const allPositive = (...inputs) => {
+      return inputs.every(inp => inp > 0);
+    };
     // Get data from form
-
-    // Check if data is vaild
+    const type = inputType.value;
+    const distance = +inputDistance.value; // 문자열이여서 숫자로 변경
+    const duration = +inputDuration.value;
+    const { lat, lng } = this.#mapEvent.latlng;
+    let workout;
 
     // If workout runnong, create running object
+    if (type === 'running') {
+      const cadence = +inputCadence.value;
+      // Check if data is vaild
+      if (
+        // 원래는 이렇게 하나하나 해야하는데
+        // !Number.isFinite(distance)||
+        // !Number.isFinite(duration)
+        !valudInput(distance, duration, cadence) ||
+        !allPositive(distance, duration, cadence)
+      ) {
+        return alert('Inputs have to positive numbers!');
+      }
 
+      // 정상 입력, 객체 만들기
+      workout = new Running([lat, lng], distance, duration, cadence);
+      console.log(workout);
+    }
+    // If workout cycling, create running object
+    if (type === 'cycling') {
+      const elecation = +inputElevation.value;
+      // Check if data is vaild
+      if (
+        !valudInput(distance, duration, elecation) ||
+        !allPositive(distance, duration)
+      ) {
+        return alert('Inputs have to positive numbers!');
+      }
+
+      // 정상 입력, 객체 만들기
+      workout = new Cycling([lat, lng], distance, duration, elecation);
+    }
     // Add new object to workout array
-
+    this.#workouts.push(workout);
     // Render workout on map as marker
-
+    this.renderWorkoutMarker(workout); // this 키워드에 의해 나오기 때문에 bind를 안해줘도됨
     // Render work on list
 
     // Hide Clear inpur fields
-
-    // Clear input fields
     inputDistance.value =
       inputCadence.value =
       inputDuration.value =
       inputElevation.value =
         '';
+  }
 
-    const { lat, lng } = this.#mapEvent.latlng;
-    L.marker([lat, lng])
+  renderWorkoutMarker(workout) {
+    L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -137,7 +175,7 @@ class App {
           minWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: 'running-popup',
+          className: `${workout.type}-popup`,
         })
       )
       .setPopupContent('workout')
