@@ -10,7 +10,51 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+// OBJECT
+class Workout {
+  date = new Date();
+  id = String(Date.now()).slice(-10); // 하지만 사용자 여러명이 동시에 사용할 가능성이 있기때문에 id를 시간으로 하는것은 좋지 않다
 
+  constructor(distance, duraton, coords) {
+    // 옛날엔..
+    // this.date = new Date();
+    // this. id = ... 이런식
+    this.distance = distance;
+    this.duraton = duraton;
+    this.coords = coords;
+  }
+}
+
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+    this.calcPace();
+  }
+
+  calcPace() {
+    this.pace = this.duration / this.distance;
+    return this.pace;
+  }
+}
+
+class Cycling extends Workout {
+  constructor(coords, distance, duration, elecationGain) {
+    super(coords, distance, duration);
+    this.elecationGain = elecationGain;
+    this.calcSpeed();
+  }
+
+  calcSpeed() {
+    this.speed = this.distance / (this.duration / 60);
+    return this.speed;
+  }
+}
+
+const run1 = new Running([39, -12], 5.2, 24, 178);
+console.log(run1);
+
+// APP APLICATION
 class App {
   #map;
   #mapEvent;
@@ -62,6 +106,20 @@ class App {
   }
   _newWorkOut(e) {
     e.preventDefault();
+
+    // Get data from form
+
+    // Check if data is vaild
+
+    // If workout runnong, create running object
+
+    // Add new object to workout array
+
+    // Render workout on map as marker
+
+    // Render work on list
+
+    // Hide Clear inpur fields
 
     // Clear input fields
     inputDistance.value =

@@ -75,7 +75,16 @@ const inputDistance = document.querySelector('.form__input--distance');
 const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
+// OBJECT
+class Workout {
+  constructor() {
+    this.distance = distance;
+    this.duration = duration;
+    this.coords = coords;
+  }
+}
 
+// APP APLICATION
 class App {
   #map;
   #mapZoomLevel = 13;
@@ -135,8 +144,11 @@ class App {
 
   _hideForm() {
     // Empty inputs
-    inputDistance.value = inputDuration.value = inputCadence.value = inputElevation.value =
-      '';
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        '';
 
     form.style.display = 'none';
     form.classList.add('hidden');
