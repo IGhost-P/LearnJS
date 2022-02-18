@@ -39,15 +39,21 @@ const getJSON = function (url, errorMsg = 'Something went wrong') {
 ///////////////////////////////////////
 // Our First AJAX Call: XMLHttpRequest
 
+// 재상용을 위해 함수로 만들자
 const getCountryData = function (country) {
   const request = new XMLHttpRequest();
-  request.open('GET', `https://restcountries.eu/rest/v2/name/${country}`);
+  // request.open(데이터 메서드 , Ajax를 호출할  대상)
+  request.open('GET', `https://restcountries.com/v2//name/${country}`);
+
+  // data = request.send(); 이렇게 하면 비동기 처리 떄문에 받지 못한다
   request.send();
 
+  // 로드가 되면 data에 내용을 넣음 
   request.addEventListener('load', function () {
+
+    // 데이터를 객체로 만듬
     const [data] = JSON.parse(this.responseText);
     console.log(data);
-
     const html = `
   <article class="country">
     <img class="country__img" src="${data.flag}" />
@@ -67,6 +73,7 @@ const getCountryData = function (country) {
   });
 };
 
+// 페이지를 로드 할때마다 순서가 바뀌는데 => 데이터를 불러오는 시간 차이 => 나중에 프로미스로 처리하면 됨
 getCountryData('portugal');
 getCountryData('usa');
 getCountryData('germany');
@@ -76,7 +83,9 @@ getCountryData('germany');
 // Welcome to Callback Hell
 
 /*
+// 이웃 국가를 호출해보자 
 const getCountryAndNeighbour = function (country) {
+
   // AJAX call country 1
   const request = new XMLHttpRequest();
   request.open('GET', `https://restcountries.eu/rest/v2/name/${country}`);
@@ -89,12 +98,12 @@ const getCountryAndNeighbour = function (country) {
     // Render country 1
     renderCountry(data);
 
-    // Get neighbour country (2)
+    // Get neighbour country (2) => 첫번째 데이터를 받아오고, 거기의 이웃 국가를 설정
     const [neighbour] = data.borders;
 
     if (!neighbour) return;
 
-    // AJAX call country 2
+    // AJAX call country 2 (1번째 이웃국가) => 지금 첫번째 국가를 가져오는 콜백 함수 안에서 또, 두번째 국가를 가져오는 콜백함수를 작성.. 이게 계속 반복 이라면..?
     const request2 = new XMLHttpRequest();
     request2.open('GET', `https://restcountries.eu/rest/v2/alpha/${neighbour}`);
     request2.send();
@@ -111,6 +120,8 @@ const getCountryAndNeighbour = function (country) {
 // getCountryAndNeighbour('portugal');
 getCountryAndNeighbour('usa');
 
+
+// 콜백지옥의 예시..
 setTimeout(() => {
   console.log('1 second passed');
   setTimeout(() => {
@@ -124,7 +135,7 @@ setTimeout(() => {
   }, 1000);
 }, 1000);
 
-
+*/
 ///////////////////////////////////////
 // Consuming Promises
 // Chaining Promises
@@ -132,20 +143,31 @@ setTimeout(() => {
 // Throwing Errors Manually
 
 // const getCountryData = function (country) {
-//   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+//   //AJax에서 호출하는방법
+//   fetch(`https://restcountries.com/v2//name/${country}`) // 프로미스를 반환한다
 //     .then(function (response) {
+//       // 성공시, 우리가 처리하기 윈하는 콜백함수를 넣자
 //       console.log(response);
 //       return response.json();
 //     })
 //     .then(function (data) {
 //       console.log(data);
 //       renderCountry(data[0]);
+//       const neighbour = data[0].borders[0];
+
+//       if (!neighbour) return;
+
+//       return 23;
+//     })
+//     .then(data => {
+//       alert(data), console.log(data);
 //     });
 // };
+// getCountryData('portugal');
 
 // const getCountryData = function (country) {
 //   // Country 1
-//   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+//   fetch(`https://restcountries.com/v2/name/${country}`)
 //     .then(response => {
 //       console.log(response);
 
@@ -156,13 +178,13 @@ setTimeout(() => {
 //     })
 //     .then(data => {
 //       renderCountry(data[0]);
-//       // const neighbour = data[0].borders[0];
-//       const neighbour = 'dfsdfdef';
+//       const neighbour = data[0].borders[0];
+//       // const neighbour = 'dfsdfdef';
 
 //       if (!neighbour) return;
 
 //       // Country 2
-//       return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`);
+//       return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
 //     })
 //     .then(response => {
 //       if (!response.ok)
@@ -180,21 +202,30 @@ setTimeout(() => {
 //     });
 // };
 
+// getCountryData('asdasdzvz');
+
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
+
 const getCountryData = function (country) {
   // Country 1
-  getJSON(
-    `https://restcountries.eu/rest/v2/name/${country}`,
-    'Country not found'
-  )
+  // 수동적으로 패치와 함께 에러 메세지 만들기
+  getJSON(`https://restcountries.com/v2/name/${country}`, 'Country not found')
     .then(data => {
       renderCountry(data[0]);
       const neighbour = data[0].borders[0];
-
+      // 수동적으로 에러 메서지 만들기
       if (!neighbour) throw new Error('No neighbour found!');
 
       // Country 2
+
       return getJSON(
-        `https://restcountries.eu/rest/v2/alpha/${neighbour}`,
+        `https://restcountries.com/v2/alpha/${neighbour}`,
         'Country not found'
       );
     })
@@ -212,10 +243,7 @@ const getCountryData = function (country) {
 btn.addEventListener('click', function () {
   getCountryData('portugal');
 });
-
-// getCountryData('australia');
-*/
-
+getCountryData('australia');
 ///////////////////////////////////////
 // Coding Challenge #1
 
