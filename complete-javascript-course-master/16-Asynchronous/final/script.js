@@ -317,26 +317,27 @@ const lotteryPromise = new Promise(function (resolve, reject) {
   console.log('Lotter draw is happening 🔮');
   setTimeout(function () {
     if (Math.random() >= 0.5) {
-      resolve('You WIN 💰');
+      resolve('You WIN 💰'); // 실행자 함수
     } else {
-      reject(new Error('You lost your money 💩'));
+      reject(new Error('You lost your money 💩')); // 실행자 함수
     }
-  }, 2000);
+  }, 2000); // 비동기 처리를 할 필요는 없지만, 비동기를 보여주기 위해 setTimeout을 사용함
 });
 
+// then을 통해, 성공 할때, 실패할때 미래 가치를 결정해둘수 있다
 lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
 
-// Promisifying setTimeout
+// Promisifying setTimeout 
 const wait = function (seconds) {
   return new Promise(function (resolve) {
-    setTimeout(resolve, seconds * 1000);
+    setTimeout(resolve, seconds * 1000); // settime out은 실패할수없는 함수라, 성공만 있음, resolve("성공") 처럼 값을 넣어주면 확인 가능
   });
 };
 
-wait(1)
+wait(1) // 1초 기다림
   .then(() => {
     console.log('1 second passed');
-    return wait(1);
+    return wait(1); // 실행하고 1초를 기다림
   })
   .then(() => {
     console.log('2 second passed');
@@ -347,6 +348,8 @@ wait(1)
     return wait(1);
   })
   .then(() => console.log('4 second passed'));
+
+// 프로미스를 사용하지 않는다면?
 
 // setTimeout(() => {
 //   console.log('1 second passed');
@@ -361,6 +364,8 @@ wait(1)
 //   }, 1000);
 // }, 1000);
 
+// 바로 프로미스화 시키기
+
 Promise.resolve('abc').then(x => console.log(x));
 Promise.reject(new Error('Problem!')).catch(x => console.error(x));
 
@@ -373,6 +378,7 @@ const getPosition = function () {
     //   position => resolve(position),
     //   err => reject(err)
     // );
+    // 윗 내용과 같다
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
