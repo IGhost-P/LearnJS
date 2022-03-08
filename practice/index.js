@@ -612,20 +612,20 @@ dayjs.tz.setDefault(dayjs.tz.guess()); // 미국 중심
 // reset timezone
 dayjs.tz.setDefault();
 
-const $select = document.querySelector("option");
-const $header = document.querySelector(".container");
+// const $select = document.querySelector("option");
+// const $header = document.querySelector(".container");
 
 const showTime = (e) => {
-  $target = e.target.value;
+  // $target = e.target.value;
   contry.map((contryEl) => {
-    if (contryEl === $target) {
-      time = dayjs.tz(d, contryEl).format("YYYY.MM.DD HH:mm:ss");
-      html = `
-            <h1> 해당 국가 시간 입니다 </h1>
-            <h3>${time}</h3>
-            `;
-      $header.insertAdjacentHTML("beforebegin", html);
-    }
+    time = dayjs.tz(d, contryEl).format("YYYY.MM.DD HH:mm:ss");
+    // html = `
+    //       <h1> 해당 국가 시간 입니다 </h1>
+    //       <h3>${time}</h3>
+    //       `;
+    // $header.insertAdjacentHTML("beforebegin", html);
+    console.log("국가:", contryEl, "시간: ", time);
   });
 };
-$select.addEventListener("click", showTime);
+// $select.addEventListener("click", showTime);
+showTime();
