@@ -479,6 +479,8 @@ const showRecipe = async function() {
     try {
         // getHash
         const id = window.location.hash.slice(1);
+        // guard clause
+        if (!id) return;
         // loding svg
         renderSpinner(recipeContainer);
         // loding recipe
@@ -508,7 +510,12 @@ const showRecipe = async function() {
     }
 };
 // showRecipe();
-window.addEventListener('hashchange', showRecipe); // 이걸 동적으로 사용해보자
+[
+    'hashchange',
+    'load'
+].forEach((ev)=>window.addEventListener(ev, showRecipe)
+); // window.addEventListener('hashchange', showRecipe); // 이걸 동적으로 사용해보자
+ // window.addEventListener('load', showRecipe); // load이벤트를 추가
 
 },{"url:../img/icons.svg":"iwCpK","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq"}],"iwCpK":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('8LZRF') + "icons.c097e590.svg";

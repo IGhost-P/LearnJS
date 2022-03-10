@@ -32,6 +32,9 @@ const showRecipe = async function () {
     // getHash
     const id = window.location.hash.slice(1);
 
+    // guard clause
+    if (!id) return;
+
     // loding svg
     renderSpinner(recipeContainer);
 
@@ -162,4 +165,7 @@ const showRecipe = async function () {
 };
 // showRecipe();
 
-window.addEventListener('hashchange', showRecipe); // 이걸 동적으로 사용해보자
+['hashchange', 'load'].forEach(ev => window.addEventListener(ev, showRecipe));
+
+// window.addEventListener('hashchange', showRecipe); // 이걸 동적으로 사용해보자
+// window.addEventListener('load', showRecipe); // load이벤트를 추가
