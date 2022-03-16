@@ -1,20 +1,16 @@
 import { async } from 'regenerator-runtime';
-
+import { API_URL } from './config.js';
+import { getJSON } from './helpers';
+console.log(API_URL);
 export const state = {
   recipe: {},
 };
 
 export const loadRecipe = async function (id) {
   try {
-    // loding recipe
+    // loding recipe'
 
-    const res = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}`
-    );
-    const data = await res.json();
-
-    // Gruad Cluase
-    if (!res.ok) throw new Error(`${data.message} (${res.status})`);
+    const data = await getJSON(`${API_URL}/${id}`);
 
     let { recipe } = data.data;
     state.recipe = {
@@ -30,6 +26,8 @@ export const loadRecipe = async function (id) {
 
     // console.log(recipe);
   } catch (err) {
-    alert(err);
+    // Temp error handling
+    console.error(`${err} 🔥 🔥 🔥 🔥`);
+    throw err; // 헬퍼 function과 마찬가지로 err를 던져줘야한다 이렇게 하면 loadRecipe를 부르는 controller에 보내지고 controller은 view의 함수를 이용해 err를 보여준다
   }
 };
