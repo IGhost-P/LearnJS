@@ -6,6 +6,7 @@ import recipeView from './views/recipeView.js';
 import { async } from 'regenerator-runtime/runtime';
 import searchView from './views/searchView.js';
 import resultView from './views/resultView.js';
+import paginationView from './views/paginationView.js';
 const recipeContainer = document.querySelector('.recipe');
 
 // https://forkify-api.herokuapp.com/v2
@@ -49,14 +50,27 @@ const controlSearchResults = async function () {
     await model.loadSearchResults(query);
 
     // 3) Render results
-    resultView.render(model.state.search.results);
+    // resultView.render(model.state.search.results);
+    resultView.render(model.getSearchResultPage());
+
+    /// 4) Render inital pagination buttons
+    paginationView.render(model.state.search);
   } catch (err) {
     console.log(err);
   }
+};
+// 새로운 컨트롤러를 만들어주자 (클릭할때마다 생김), 값을 받아서 새로 페이지를 랜더링 할것
+const controlPaination = function (goToPage) {
+  // 1) New Render results
+  resultView.render(model.getSearchResultPage(goToPage)); // getSearchResultPage에 의해 상태 값(page)이 변경된다 => 랜더링 되는게 바뀜
+
+  /// 2) New Render inital pagination buttons
+  paginationView.render(model.state.search);
 };
 
 const init = function () {
   recipeView.addHandlerRender(controlRecipe);
   searchView.addHandlerSearch(controlSearchResults);
+  paginationView.addHandlerClick(controlPaination);
 };
 init();
