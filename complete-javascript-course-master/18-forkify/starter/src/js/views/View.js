@@ -2,13 +2,15 @@ import icons from 'url:../../img/icons.svg'; //
 
 export default class View {
   _data; // render에 들어갈 데이터
-  render(data) {
+  render(data, render = true) {
     // data가 없거나, 배열이 아니거나 ,빈 배열이면 문제가 생김
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
     this._data = data;
     const markup = this._generateMarkup();
+
+    if (!render) return markup;
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup); //
   }

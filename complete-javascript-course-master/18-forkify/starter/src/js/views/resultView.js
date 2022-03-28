@@ -1,32 +1,15 @@
 import View from './View.js';
-import icons from 'url:../../img/icons.svg';
-// recipeView랑 상당히 유사하다
-class ResultView extends View {
+import previewView from './previewView.js';
+import icons from 'url:../../img/icons.svg'; // Parcel 2
+
+class ResultsView extends View {
   _parentElement = document.querySelector('.results');
-  _errorMessage = 'No recipes found for your query! Please try again;';
+  _errorMessage = 'No recipes found for your query! Please try again ;)';
   _message = '';
+
   _generateMarkup() {
-    return this._data.map(this._generateMarkupPriview).join('');
-  }
-  _generateMarkupPriview(result) {
-    // 해쉬값 가져오기
-    const id = window.location.hash.slice(1);
-    return `
-    <li class="preview">
-    <a class="preview__link ${
-      result.id === id ? 'preview__link--active' : ''
-    }" href="#${result.id}">
-      <figure class="preview__fig">
-        <img src="${result.image}" alt="${result.title}" />
-      </figure>
-      <div class="preview__data">
-      <h4 class="preview__title">${result.title}</h4>
-      <p class="preview__publisher">${result.publisher}</p>
-      </div>
-    </a>
-  </li> 
-      `;
+    return this._data.map(result => previewView.render(result, false)).join('');
   }
 }
 
-export default new ResultView();
+export default new ResultsView();

@@ -7,6 +7,7 @@ import { async } from 'regenerator-runtime/runtime';
 import searchView from './views/searchView.js';
 import resultView from './views/resultView.js';
 import paginationView from './views/paginationView.js';
+import bookmarskView from './views/bookmarksView.js';
 const recipeContainer = document.querySelector('.recipe');
 
 // https://forkify-api.herokuapp.com/v2
@@ -30,6 +31,7 @@ const controlRecipe = async function () {
 
     // 0) Updata recipe
     resultView.update(model.getSearchResultPage());
+    bookmarskView.update(model.state.bookmarks);
 
     // 1) Loding Recipe (from model.js)
     await model.loadRecipe(id);
@@ -86,6 +88,9 @@ const controlAddBookmark = function () {
   // 북마크가 있다면 삭제
   else model.deleteBookmark(model.state.recipe.id);
   recipeView.update(model.state.recipe);
+
+  // 3) Render bookmarks
+  bookmarskView.render(model.state.bookmarks);
 };
 
 const init = function () {
