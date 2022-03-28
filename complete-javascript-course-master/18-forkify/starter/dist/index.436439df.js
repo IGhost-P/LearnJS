@@ -522,15 +522,22 @@ const controlServings = function(newServings) {
     // recipeView.render(model.state.recipe);
     _recipeViewJsDefault.default.update(_modelJs.state.recipe);
 };
+const controlAddBookmark = function() {
+    // 북마크가 없다면 추가
+    if (!_modelJs.state.recipe.bookmarked) _modelJs.addBookmark(_modelJs.state.recipe);
+    else _modelJs.deleteBookmark(_modelJs.state.recipe.id);
+    _recipeViewJsDefault.default.update(_modelJs.state.recipe);
+};
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipe);
     _recipeViewJsDefault.default.addHandlerUpdateServings(controlServings);
+    _recipeViewJsDefault.default.addHandlerAddBookmark(controlAddBookmark);
     _searchViewJsDefault.default.addHandlerSearch(controlSearchResults);
     _paginationViewJsDefault.default.addHandlerClick(controlPaination);
 };
 init();
 
-},{"./model.js":"6Yfb5","core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq","./views/recipeView.js":"9q0mt","./views/searchView.js":"51HTZ","./views/resultView.js":"dmYXU","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./views/paginationView.js":"c2v8w"}],"6Yfb5":[function(require,module,exports) {
+},{"./model.js":"6Yfb5","core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq","./views/recipeView.js":"9q0mt","./views/searchView.js":"51HTZ","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./views/paginationView.js":"c2v8w","./views/resultView.js":"dmYXU"}],"6Yfb5":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state
@@ -542,6 +549,10 @@ parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
 parcelHelpers.export(exports, "getSearchResultPage", ()=>getSearchResultPage
 );
 parcelHelpers.export(exports, "updateServings", ()=>updateServings
+);
+parcelHelpers.export(exports, "addBookmark", ()=>addBookmark
+);
+parcelHelpers.export(exports, "deleteBookmark", ()=>deleteBookmark
 );
 var _regeneratorRuntime = require("regenerator-runtime");
 var _configJs = require("./config.js");
@@ -555,7 +566,8 @@ const state = {
         results: [],
         page: 1,
         resultsPerPage: _configJs.RES_PER_PAGE
-    }
+    },
+    bookmarks: []
 };
 const loadRecipe = async function(id) {
     try {
@@ -572,6 +584,9 @@ const loadRecipe = async function(id) {
             cookingTime: recipe.cooking_time,
             ingredients: recipe.ingredients
         };
+        if (state.bookmarks.some((bookmarked)=>bookmarked.id === id
+        )) state.recipe.bookmarked = true;
+        else state.recipe.bookmarked = false;
     // console.log(recipe);
     } catch (err) {
         // Temp error handling
@@ -593,7 +608,8 @@ const loadSearchResults = async function(query) {
                 image: rec.image_url
             };
         });
-        console.log(state.search.results);
+        // 새로운 레시피를 검색할떄 page를 1로 바꿔줘야한다
+        state.search.page = 1;
     } catch (err) {
         console.error(`${err} 🔥 🔥 🔥 🔥`);
         throw err;
@@ -611,8 +627,23 @@ const updateServings = function(newServings) {
     });
     state.recipe.servings = newServings;
 };
+const addBookmark = function(recipe) {
+    // add bookmark
+    state.bookmarks.push(recipe);
+    // Mark current recipe as bookmark (새속성을 추가해서 보여주기)
+    if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+};
+const deleteBookmark = function(id) {
+    // Delete bookmark
+    const index = state.bookmarks.findIndex((el)=>el.id === id
+    );
+    // 해당 부분만 .splice로 자른다
+    state.bookmarks.splice(index, 1);
+    // // Mark current recipe as NOT bookmark
+    if (id === state.recipe.id) state.recipe.bookmarked = false;
+};
 
-},{"regenerator-runtime":"cH8Iq","./config.js":"beA2m","./helpers":"9l3Yy","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"cH8Iq":[function(require,module,exports) {
+},{"regenerator-runtime":"cH8Iq","./config.js":"beA2m","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./helpers":"9l3Yy"}],"cH8Iq":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -15195,7 +15226,6 @@ class View {
         const curElements = Array.from(this._parentElement.querySelectorAll('*'));
         newElements.forEach((newEl, i)=>{
             const curEl = curElements[i];
-            console.log(curEl, newEl.isEqualNode(curEl));
             // Update changed TEXT
             if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue.trim() !== '') curEl.textContent = newEl.textContent;
             //Update changed ATTRIBUES
@@ -15537,30 +15567,7 @@ class SearchView {
 }
 exports.default = new SearchView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"dmYXU":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _viewJs = require("./View.js");
-var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
-var _iconsSvg = require("url:../../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-// recipeView랑 상당히 유사하다
-class ResultView extends _viewJsDefault.default {
-    _parentElement = document.querySelector('.results');
-    _errorMessage = 'No recipes found for your query! Please try again;';
-    _message = '';
-    _generateMarkup() {
-        return this._data.map(this._generateMarkupPriview).join('');
-    }
-    _generateMarkupPriview(result) {
-        // 해쉬값 가져오기
-        const id = window.location.hash.slice(1);
-        return `\n    <li class="preview">\n    <a class="preview__link ${result.id === id ? 'preview__link--active' : ''}" href="#${result.id}">\n      <figure class="preview__fig">\n        <img src="${result.image}" alt="${result.title}" />\n      </figure>\n      <div class="preview__data">\n      <h4 class="preview__title">${result.title}</h4>\n      <p class="preview__publisher">${result.publisher}</p>\n      </div>\n    </a>\n  </li> \n      `;
-    }
-}
-exports.default = new ResultView();
-
-},{"./View.js":"8rtS4","url:../../img/icons.svg":"iwCpK","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"c2v8w":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"c2v8w":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
@@ -15594,6 +15601,29 @@ class PaginationView extends _viewDefault.default {
 }
 exports.default = new PaginationView();
 
-},{"./View":"8rtS4","url:../../img/icons.svg":"iwCpK","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}]},["drOo7","jKMjS"], "jKMjS", "parcelRequire3a11")
+},{"./View":"8rtS4","url:../../img/icons.svg":"iwCpK","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"dmYXU":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./View.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+// recipeView랑 상당히 유사하다
+class ResultView extends _viewJsDefault.default {
+    _parentElement = document.querySelector('.results');
+    _errorMessage = 'No recipes found for your query! Please try again;';
+    _message = '';
+    _generateMarkup() {
+        return this._data.map(this._generateMarkupPriview).join('');
+    }
+    _generateMarkupPriview(result) {
+        // 해쉬값 가져오기
+        const id = window.location.hash.slice(1);
+        return `\n    <li class="preview">\n    <a class="preview__link ${result.id === id ? 'preview__link--active' : ''}" href="#${result.id}">\n      <figure class="preview__fig">\n        <img src="${result.image}" alt="${result.title}" />\n      </figure>\n      <div class="preview__data">\n      <h4 class="preview__title">${result.title}</h4>\n      <p class="preview__publisher">${result.publisher}</p>\n      </div>\n    </a>\n  </li> \n      `;
+    }
+}
+exports.default = new ResultView();
+
+},{"./View.js":"8rtS4","url:../../img/icons.svg":"iwCpK","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}]},["drOo7","jKMjS"], "jKMjS", "parcelRequire3a11")
 
 //# sourceMappingURL=index.436439df.js.map

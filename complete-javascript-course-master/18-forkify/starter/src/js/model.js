@@ -10,6 +10,7 @@ export const state = {
     page: 1,
     resultsPerPage: RES_PER_PAGE,
   },
+  bookmarks: [],
 };
 
 export const loadRecipe = async function (id) {
@@ -29,6 +30,10 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
+
+    if (state.bookmarks.some(bookmarked => bookmarked.id === id))
+      state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
 
     // console.log(recipe);
   } catch (err) {
@@ -54,7 +59,8 @@ export const loadSearchResults = async function (query) {
         image: rec.image_url,
       };
     });
-    console.log(state.search.results);
+    // 새로운 레시피를 검색할떄 page를 1로 바꿔줘야한다
+    state.search.page = 1;
   } catch (err) {
     console.error(`${err} 🔥 🔥 🔥 🔥`);
     throw err;
@@ -75,4 +81,21 @@ export const updateServings = function (newServings) {
   });
 
   state.recipe.servings = newServings;
+};
+
+export const addBookmark = function (recipe) {
+  // add bookmark
+  state.bookmarks.push(recipe);
+
+  // Mark current recipe as bookmark (새속성을 추가해서 보여주기)
+  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+};
+export const deleteBookmark = function (id) {
+  // Delete bookmark
+  const index = state.bookmarks.findIndex(el => el.id === id);
+  // 해당 부분만 .splice로 자른다
+  state.bookmarks.splice(index, 1);
+
+  // // Mark current recipe as NOT bookmark
+  if (id === state.recipe.id) state.recipe.bookmarked = false;
 };
