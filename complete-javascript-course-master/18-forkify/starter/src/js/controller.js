@@ -1,5 +1,4 @@
 import * as model from './model.js';
-
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import recipeView from './views/recipeView.js';
@@ -33,10 +32,13 @@ const controlRecipe = async function () {
     resultView.update(model.getSearchResultPage());
     bookmarskView.update(model.state.bookmarks);
 
-    // 1) Loding Recipe (from model.js)
+    // 1) Updating bookmarks view
+    bookmarskView.update(model.state.bookmarks);
+
+    // 2) Loding Recipe (from model.js)
     await model.loadRecipe(id);
 
-    // 2) Rendering recipe
+    // 3) Rendering recipe
     recipeView.render(model.state.recipe);
   } catch (err) {
     console.error(new Error());
@@ -93,7 +95,12 @@ const controlAddBookmark = function () {
   bookmarskView.render(model.state.bookmarks);
 };
 
+const controlBookmarks = function () {
+  bookmarskView.render(model.state.bookmarks);
+};
+
 const init = function () {
+  bookmarskView.addHandlerRender(controlBookmarks);
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlAddBookmark);

@@ -485,9 +485,11 @@ const controlRecipe = async function() {
         // 0) Updata recipe
         _resultViewJsDefault.default.update(_modelJs.getSearchResultPage());
         _bookmarksViewJsDefault.default.update(_modelJs.state.bookmarks);
-        // 1) Loding Recipe (from model.js)
+        // 1) Updating bookmarks view
+        _bookmarksViewJsDefault.default.update(_modelJs.state.bookmarks);
+        // 2) Loding Recipe (from model.js)
         await _modelJs.loadRecipe(id);
-        // 2) Rendering recipe
+        // 3) Rendering recipe
         _recipeViewJsDefault.default.render(_modelJs.state.recipe);
     } catch (err) {
         console.error(new Error());
@@ -533,7 +535,11 @@ const controlAddBookmark = function() {
     // 3) Render bookmarks
     _bookmarksViewJsDefault.default.render(_modelJs.state.bookmarks);
 };
+const controlBookmarks = function() {
+    _bookmarksViewJsDefault.default.render(_modelJs.state.bookmarks);
+};
 const init = function() {
+    _bookmarksViewJsDefault.default.addHandlerRender(controlBookmarks);
     _recipeViewJsDefault.default.addHandlerRender(controlRecipe);
     _recipeViewJsDefault.default.addHandlerUpdateServings(controlServings);
     _recipeViewJsDefault.default.addHandlerAddBookmark(controlAddBookmark);
@@ -542,7 +548,7 @@ const init = function() {
 };
 init();
 
-},{"./model.js":"6Yfb5","core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq","./views/recipeView.js":"9q0mt","./views/searchView.js":"51HTZ","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./views/paginationView.js":"c2v8w","./views/resultView.js":"dmYXU","./views/bookmarksView.js":"cUfi0"}],"6Yfb5":[function(require,module,exports) {
+},{"./model.js":"6Yfb5","core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq","./views/recipeView.js":"9q0mt","./views/searchView.js":"51HTZ","./views/resultView.js":"dmYXU","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./views/paginationView.js":"c2v8w","./views/bookmarksView.js":"cUfi0"}],"6Yfb5":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state
@@ -632,11 +638,16 @@ const updateServings = function(newServings) {
     });
     state.recipe.servings = newServings;
 };
+// 북마크를 저장함
+const persistBookmarks = function() {
+    localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
 const addBookmark = function(recipe) {
     // add bookmark
     state.bookmarks.push(recipe);
     // Mark current recipe as bookmark (새속성을 추가해서 보여주기)
     if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+    persistBookmarks();
 };
 const deleteBookmark = function(id) {
     // Delete bookmark
@@ -646,9 +657,18 @@ const deleteBookmark = function(id) {
     state.bookmarks.splice(index, 1);
     // // Mark current recipe as NOT bookmark
     if (id === state.recipe.id) state.recipe.bookmarked = false;
+    persistBookmarks();
+};
+const init = function() {
+    const storage = localStorage.getItem('bookmarks');
+    if (storage) state.bookmarks = JSON.parse(storage);
+};
+init();
+const clearBookmarks = function() {
+    localStorage.clear('bookmarks');
 };
 
-},{"regenerator-runtime":"cH8Iq","./config.js":"beA2m","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./helpers":"9l3Yy"}],"cH8Iq":[function(require,module,exports) {
+},{"regenerator-runtime":"cH8Iq","./config.js":"beA2m","./helpers":"9l3Yy","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"cH8Iq":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -15573,41 +15593,7 @@ class SearchView {
 }
 exports.default = new SearchView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"c2v8w":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _view = require("./View");
-var _viewDefault = parcelHelpers.interopDefault(_view);
-var _iconsSvg = require("url:../../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-class PaginationView extends _viewDefault.default {
-    _parentElement = document.querySelector('.pagination');
-    addHandlerClick(handler) {
-        this._parentElement.addEventListener('click', function(e) {
-            // pagination안에 있는 어떠한 자식들중 하나라도 이벤트가 생긴다면, svg, span등 여튼 그렇담 그 위로 .btn--inline'를 가진게 btn이니깐 btn을 찾아 갈수 있다
-            const btn = e.target.closest('.btn--inline');
-            if (!btn) return;
-            const goToPage = +btn.dataset.goto;
-            console.log(btn);
-            handler(goToPage); // dataset을 이용한 값을 핸들러에 전달해준다
-        });
-    }
-    _generateMarkup() {
-        const curPage = this._data.page;
-        const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
-        // Page 1, and there are other pages
-        if (curPage === 1 && numPages && numPages > 1) return ` <button class="btn--inline pagination__btn--next" data-goto="${curPage + 1}">\n      <span>Page ${curPage + 1}</span>\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n      </svg>\n    </button>`;
-        // Last Page
-        if (curPage === numPages) return ` <button class="btn--inline pagination__btn--prev" data-goto="${curPage - 1}">\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}icon-arrow-left"></use>\n      </svg>\n      <span>Page ${curPage - 1}</span>\n    </button>`;
-        // other page
-        if (curPage < numPages) return `\n      <button class="btn--inline pagination__btn--prev" data-goto="${curPage - 1}">\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}icon-arrow-left"></use>\n      </svg>\n      <span>Page ${curPage - 1}</span>\n    </button>\n    <button class="btn--inline pagination__btn--next" data-goto="${curPage + 1}">\n      <span>Page ${curPage + 1}</span>\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n      </svg>\n    </button>\n    `;
-        // Page 1, and there are No other pages
-        return '';
-    }
-}
-exports.default = new PaginationView();
-
-},{"./View":"8rtS4","url:../../img/icons.svg":"iwCpK","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"dmYXU":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"dmYXU":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./View.js");
@@ -15707,7 +15693,41 @@ exports.default = View;
 },{"url:../../img/icons.svg":"1ez0S","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"1ez0S":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('8LZRF') + "icons.127f26e6.svg";
 
-},{"./helpers/bundle-url":"8YnfL"}],"cUfi0":[function(require,module,exports) {
+},{"./helpers/bundle-url":"8YnfL"}],"c2v8w":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./View");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class PaginationView extends _viewDefault.default {
+    _parentElement = document.querySelector('.pagination');
+    addHandlerClick(handler) {
+        this._parentElement.addEventListener('click', function(e) {
+            // pagination안에 있는 어떠한 자식들중 하나라도 이벤트가 생긴다면, svg, span등 여튼 그렇담 그 위로 .btn--inline'를 가진게 btn이니깐 btn을 찾아 갈수 있다
+            const btn = e.target.closest('.btn--inline');
+            if (!btn) return;
+            const goToPage = +btn.dataset.goto;
+            console.log(btn);
+            handler(goToPage); // dataset을 이용한 값을 핸들러에 전달해준다
+        });
+    }
+    _generateMarkup() {
+        const curPage = this._data.page;
+        const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
+        // Page 1, and there are other pages
+        if (curPage === 1 && numPages && numPages > 1) return ` <button class="btn--inline pagination__btn--next" data-goto="${curPage + 1}">\n      <span>Page ${curPage + 1}</span>\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n      </svg>\n    </button>`;
+        // Last Page
+        if (curPage === numPages) return ` <button class="btn--inline pagination__btn--prev" data-goto="${curPage - 1}">\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}icon-arrow-left"></use>\n      </svg>\n      <span>Page ${curPage - 1}</span>\n    </button>`;
+        // other page
+        if (curPage < numPages) return `\n      <button class="btn--inline pagination__btn--prev" data-goto="${curPage - 1}">\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}icon-arrow-left"></use>\n      </svg>\n      <span>Page ${curPage - 1}</span>\n    </button>\n    <button class="btn--inline pagination__btn--next" data-goto="${curPage + 1}">\n      <span>Page ${curPage + 1}</span>\n      <svg class="search__icon">\n        <use href="${_iconsSvgDefault.default}#icon-arrow-right"></use>\n      </svg>\n    </button>\n    `;
+        // Page 1, and there are No other pages
+        return '';
+    }
+}
+exports.default = new PaginationView();
+
+},{"./View":"8rtS4","url:../../img/icons.svg":"iwCpK","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"cUfi0":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./View.js");
