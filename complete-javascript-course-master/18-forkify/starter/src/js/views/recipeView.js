@@ -30,6 +30,8 @@ class RecipeView extends View {
     });
   }
 
+  //생성
+
   _generateMarkup() {
     return `
       <figure class="recipe__fig">
