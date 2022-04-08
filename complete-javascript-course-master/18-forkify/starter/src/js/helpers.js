@@ -9,16 +9,37 @@ const timeout = function (s) {
   });
 };
 
-export const getJSON = async function (url) {
+// export const getJSON = async function (url) {
+//   try {
+//     const res = await Promise.race([fetch(`${url}`), timeout(TIMEOUT_SEC)]);
+//     const data = await res.json();
+
+//     // Gruad Cluase
+//     if (!res.ok) throw new Error(`${data.message} (${res.status})`);
+
+//     return data;
+//   } catch (err) {
+//     throw err; // err가 getJSON을 호출한 비동기 함수까지가지 않기때문에 throw err를 통해 보낸준다
+//   }
+// };
+export const AJAX = async function (url, uploadData = undefined) {
   try {
-    const res = await Promise.race([fetch(`${url}`), timeout(TIMEOUT_SEC)]);
+    const fetchPro = uploadData
+      ? fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(uploadData),
+        })
+      : fetch(url);
+
+    const res = await Promise.race([fetchPro, timeout(TIMEOUT_SEC)]);
     const data = await res.json();
 
-    // Gruad Cluase
     if (!res.ok) throw new Error(`${data.message} (${res.status})`);
-
     return data;
   } catch (err) {
-    throw err; // err가 getJSON을 호출한 비동기 함수까지가지 않기때문에 throw err를 통해 보낸준다
+    throw err;
   }
 };
