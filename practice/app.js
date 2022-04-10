@@ -18,6 +18,7 @@ app.listen(3000, function () {
 app.listen(3000, function () {
   console.log("서버 가동");
 });
+
 app.listen(3000, function () {
   console.log("서버 가동");
 });
