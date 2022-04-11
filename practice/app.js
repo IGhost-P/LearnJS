@@ -11,14 +11,3 @@ app.get("/", (req, res) => {
 app.get("/login", (req, res) => {
   res.render("home/login");
 });
-app.listen(3000, function () {
-  console.log("서버 가동");
-});
-
-app.listen(3000, function () {
-  console.log("서버 가동");
-});
-
-app.listen(3000, function () {
-  console.log("서버 가동");
-});
