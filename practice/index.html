@@ -5,26 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-  
-    <script src="path/to/dayjs/dayjs.min.js"></script>
-    <script>
-        dayjs().format()
-      </script>
-    <script type ="module" src="index.js"></script>
 </head>
 <body>
-<div class="container">
-    <strong>main page</strong>
-    
-    <select name="contry">
-        <option value="">국가 선택</option>
-        <option value="America/Panama">미국</option>
-        <option value="Japan">일본</option>
-        <option value="Europe/Jersey">런던</option>
-        <option value="Asia/Ho_Chi_Minh">베트남</option>
-        <option value="Asia/Seoul">대한민국</option>
-    </select>
-</div>
-
+    <div>"이전값입니다."</div>
+    <div>"이건 변경이 아님"</div>
 </body>
+<script>
+    var tagString = "<div>I am a div node</div>";
+    var range = document.createRange();
+
+    // Make the parent of the first div in the document become the context node
+    var prev = document.getElementsByTagName("div").item(0);
+
+    var documentFragment = range.createContextualFragment(tagString);
+
+    console.log(documentFragment)
+
+    setTimeout(function() {
+        const body = document.querySelector('body')
+        body.querySelector('div')?.remove()
+        body.appendChild(documentFragment);
+    }, 1000);
+</script>
 </html>
