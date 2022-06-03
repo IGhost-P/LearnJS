@@ -7,5 +7,5 @@ const getCorrectDate = () => {
   console.log(date);
   return date;
 };
-ㅁㄴㅇㄴㅁㅇ
+
 console.log("네?", getCorrectDate());
