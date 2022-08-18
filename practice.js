@@ -1,12 +1,18 @@
-const add = () => {
-  return "add 함수입니다";
-};
-const add2 = () => {
-  return "add2 함수 입니다";
-};
+import { useState } from "./useState.js";
+import Todo from "./todo.js";
+import InputTodo from "./inputTodo.js";
 
-const recall = () => {
-  add2();
-  return add();
-};
-console.log(recall());
+const state = new useState({ userName: "Dan", todo: "Learn React" });
+
+const todo = new Todo(document.querySelector("#todo"), state);
+
+const inputTodo = new InputTodo(
+  document.querySelector("#input-todo"),
+  (todo) => {
+    state.setState({ ...state.getState(), todo });
+  }
+);
+
+state.listen(() => {
+  todo.render(state);
+});

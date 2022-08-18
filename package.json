@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/IGhost-P/LearnJS/issues"
   },
-  "homepage": "https://github.com/IGhost-P/LearnJS#readme"
+  "homepage": "https://github.com/IGhost-P/LearnJS#readme",
+  "keywords": [],
+  "dependencies": {
+    "node-fetch": "^3.2.6"
+  }
 }
